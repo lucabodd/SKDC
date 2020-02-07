@@ -1,0 +1,32 @@
+{
+    "skdc": {
+        "user": "skdc.app",
+        "admin_mail": "ict@example.com",
+        "dir": "/var/www/SKDC/",
+        "log_dir" : "/var/log/SKDC/",
+        "run_dir" : "/var/run/SKDC/",
+        "SSL": {
+            "CERT": "/var/www/SKDC/ssl/https/STAR_yourcert.crt",
+            "KEY": "/var/www/SKDC/ssl/https/STAR.your.key"
+        }
+    },
+    "mongo": {
+        "url": "mongodb://skdc.app:password:27017/?authMechanism=SCRAM-SHA-256&authSource=SKDC",
+        "instance": "SKDC"
+    },
+    "ldap": {
+        "uri": "ldaps://yourserver",
+        "TLS": {
+            "CA": "/var/www/SKDC/ssl/ldap/cacert.pem",
+            "KEY": "/var/www/SKDC/ssl/ldap/slap1key.pem",
+            "CERT": "/var/www/SKDC/ssl/ldap/slap1cert.pem"
+        },
+        "base_dn": "dc=example,dc=it",
+        "bind_dn": "cn=admin,dc=example,dc=it",
+        "bind_password": "yourpassword",
+        "read_only_dn": "cn=admin,dc=example,dc=it",
+        "read_only_password": "yourpassword",
+        "users_ou": "users",
+        "groups_ou": "groups"
+    }
+}

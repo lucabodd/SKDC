@@ -1,0 +1,120 @@
+extends layouts/layout
+
+block variables
+    - var activeGroup = 'users'
+    - var activePage = 'user-roles'
+
+block content
+    .app-title
+        div
+            h1
+                i.fa.fa-user
+                |  Users
+            p Manage users roles, note that users marked as admin has by default system-wide access
+
+        ul.app-breadcrumb.breadcrumb
+            li.breadcrumb-item
+                i.fa.fa-home.fa-lg
+            li.breadcrumb-item
+                a(href='#') Dashboard
+    <!-- user info bar -->
+    .row
+        .col-md-3
+            .widget-small.primary.coloured-icon
+                i.icon.fa.fa-users.fa-3x
+                div.info
+                  h4 Users count:
+                  p 
+                      b #{user_count}
+
+    <!-- user info bar ENDS -->
+    <!-- page content -->
+    .row
+        .col-md-12
+            .tile
+                .tile-body
+                    table.table.table-hover.table-bordered#sampleTable
+                        thead
+                            tr
+                                th Name
+                                th Email
+                                th Group
+                                th Set as User
+                                th Set as Technician
+                                th Set As Admin
+                        tbody
+                            if users
+                                each u in users
+                                    tr
+                                        td=u.name +" "+ u.surname
+                                        td=u.email
+                                        td=u.group
+                                        if u.role == 'user'
+                                            td.mx-auto(style="text-align: center;")
+                                                button.btn.btn-success.fa.fa-user-tag(disabled)
+                                            td.mx-auto(style="text-align: center;")
+                                                button.btn.btn-primary.fa.fa-user-astronaut(onclick="location.href='/update-role?sys_username=" + u.sys_username + "&email="+ u.email +"&new_role=technician'")
+                                            td.mx-auto(style="text-align: center;")
+                                                button.btn.btn-primary.fa.fa-crown(onclick="location.href='/update-role?sys_username=" + u.sys_username + "&email="+ u.email +"&new_role=admin'")
+                                        else if u.role == 'technician'
+                                            td.mx-auto(style="text-align: center;")
+                                                button.btn.btn-primary.fa.fa-user-tag(onclick="location.href='/update-role?sys_username=" + u.sys_username + "&email="+ u.email +"&new_role=user'")
+                                            td.mx-auto(style="text-align: center;")
+                                                button.btn.btn-success.fa.fa-user-astronaut(disabled)
+                                            td.mx-auto(style="text-align: center;")
+                                                button.btn.btn-primary.fa.fa-crown(onclick="location.href='/update-role?sys_username=" + u.sys_username + "&email="+ u.email +"&new_role=admin'")
+                                        else
+                                            td.mx-auto(style="text-align: center;")
+                                                button.btn.btn-primary.fa.fa-user-tag(onclick="location.href='/update-role?sys_username=" + u.sys_username + "&email="+ u.email +"&new_role=user'")
+                                            td.mx-auto(style="text-align: center;")
+                                                button.btn.btn-primary.fa.fa-user-astronaut(onclick="location.href='/update-role?sys_username=" + u.sys_username + "&email="+ u.email +"&new_role=technician'")
+                                            td.mx-auto(style="text-align: center;")
+                                                button.btn.btn-success.fa.fa-crown(disabled)
+                                        
+
+    script(type='text/javascript').
+        var err = #{error}
+        if(err != undefined) {
+                if(!err)
+                     Swal.fire({
+                        title: 'Done! Task completed successfully',
+                        toast: true,
+                        icon: 'success',
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        onOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    })
+            else
+                var code = #{code}
+                Swal.fire({
+                   title: 'Error!',
+                   text: 'An error occurred executing the operation.',
+                   footer: '<a href="/docs#'+ code +'">Why do I have this issue?</a>',
+                   toast: true,
+                   icon: 'error',
+                   position: 'top-end',
+                   showConfirmButton: false,
+                   timer: 3000,
+                   timerProgressBar: true,
+                   onOpen: (toast) => {
+                       toast.addEventListener('mouseenter', Swal.stopTimer)
+                       toast.addEventListener('mouseleave', Swal.resumeTimer)
+                   }
+                })
+        }
+    block specific-js
+        script(src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js")
+        script(src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js")
+        link(rel='stylesheet', type='text/css', href='https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css')
+        script(type='text/javascript').
+            $('#sampleTable').DataTable({
+                searching: true,
+                ordering: true,
+                autoWidth: true,
+                smart: false,
+            });

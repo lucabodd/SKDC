@@ -1,0 +1,17 @@
+extends layouts/basic
+
+block variables
+    - var activePage = 'error-page'
+    - var activeGroup = 'pages'
+
+block title
+    title Error Page - Vali Admin
+
+block content
+    .page-error.tile.col-lg-6.mx-auto
+        h1
+            i.fa.fa-exclamation-circle
+            //TODO 5 enter error message
+            |  Error #{message}: #{error.status}
+        p #{error.detail}
+        p: a.btn.btn-primary(href="javascript:window.history.back();") Go Back

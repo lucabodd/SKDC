@@ -1,0 +1,219 @@
+extends layouts/layout
+
+block variables
+    - var activeGroup = 'hosts'
+    - var activePage = 'host-mgmt'
+
+block content
+    .app-title
+        div
+            h1
+                i.fa.fa-hdd
+                |  Host
+            p Manage hosts to perform mass actions in order to grant SSH access to various users
+
+        ul.app-breadcrumb.breadcrumb
+            li.breadcrumb-item
+                i.fa.fa-home.fa-lg
+            li.breadcrumb-item
+                a(href='#') Dashboard
+    <!-- user info bar -->
+    .row
+        .col-md-3
+            .widget-small.primary.coloured-icon
+                i.icon.fa.fa-server.fa-3x
+                div.info
+                    h4 Host Number
+                    p
+                        b #{host_count}
+
+    .row
+        .col-md-12
+            .widget-small.primary.coloured-icon
+                i.icon.fa.fa-plus.fa-3x
+                div.info
+                    h4 Add Host SSH info
+                    p
+                        form(method='POST' action='/host-add')
+                            div.form-row
+                                div.col
+                                    input.form-control(type='text', placeholder='Hostname' name='hostname' required style="")
+                                div.col
+                                    input.form-control(type='text', placeholder="IP Address"  name='ip' required)
+                                div.col
+                                    input.form-control(type='text', placeholder="SSH Port"  name='port' required)
+                                div.col
+                                    select.form-control.selectpicker(name="cluster" 
+                                                                     title="Select a Cluster"
+                                                                     data-header="Select a Cluster"
+                                                                     data-size="5" 
+                                                                     data-actions-box="true" 
+                                                                     data-live-search="true" 
+                                                                     required)
+                                        option(value="none") None
+                                        if clusters
+                                            each val in clusters
+                                                option(value=val.name)=val.name
+                                div.col
+                                    select.form-control.selectpicker(name="proxy" 
+                                                                     title="Select a Proxy"
+                                                                     data-header="Select a Proxy"
+                                                                     data-size="5" 
+                                                                     data-actions-box="true" 
+                                                                     data-live-search="true" 
+                                                                     required)
+                                        option(value="none") None
+                                        if hosts
+                                            each val in hosts
+                                                option(value=val.hostname)=val.hostname
+                                
+                                div.col
+                                    button.btn.btn-info
+                                        i.fa.fa-plus
+
+    <!-- user info bar ENDS -->
+    <!-- page content -->
+    .row
+        .col-md-12
+            .tile
+                .tile-body
+                    table.table.table-hover.table-bordered#sampleTable
+                        thead
+                            tr
+                                th Hostname
+                                th IP
+                                th Port
+                                th Proxy
+                                th Cluster
+                                th Conn
+                                th Delete
+                        tbody
+                            if hosts
+                                each h in hosts
+                                    tr
+                                        td=h.hostname
+                                        td=h.ip
+                                        td=h.port
+                                        td=h.proxy
+                                        td=h.cluster
+                                        if h.connection == 'TRUE'
+                                            td(style="width:  2%").mx-auto
+                                                button.btn.btn-success.fa.fa-plug
+                                        else 
+                                            if h.connection == 'SUDOERR' 
+                                                td(style="width:  2%").mx-auto
+                                                    button.btn.btn-warning.fa.fa-plug(type='button', title='', data-container='body', data-toggle='popover', data-html="true", data-placement='left', data-content=h.error, data-original-title='Application user has not sudo access')
+                                            else if h.connection == 'EARLY-FAIL'
+                                                td(style="width:  2%").mx-auto
+                                                    button.btn.btn-danger.fa.fa-plug(type='button', title='', data-container='body', data-toggle='popover', data-html="true", data-placement='left', data-content=h.error, data-original-title='Connection cannot be established')
+                                            else if h.connection == 'UNKNOWN'
+                                                td(style="width:  2%").mx-auto
+                                                    button.btn.btn-danger.fa.fa-question(type='button', title='', data-container='body', data-toggle='popover', data-html="true", data-placement='left', data-content=h.error, data-original-title='Unknown error occurred')
+                                            else if h.connection == 'CLI-UNDEPLOYED'
+                                                td(style="width:  2%").mx-auto           
+                                                    button.btn.btn-warning.fa.fa-compact-disc(type='button' title='' data-container='body' data-toggle='popover' data-html="true" data-placement='left' data-content=h.error data-original-title='Client Undeployed' onclick="deploy_confirm('"+h.hostname+"');")
+                                        td(style="width:  2%;").mx-auto
+                                            button.btn.btn-danger.fa.fa-trash(onclick="confirm('"+h.hostname+"');")
+
+    script(type='text/javascript').
+        var err = #{error}
+        if(err != undefined) {
+            if(!err)
+                Swal.fire({
+                   title: 'Done! Task completed successfully',
+                   toast: true,
+                   icon: 'success',
+                   position: 'top-end',
+                   showConfirmButton: false,
+                   timer: 3000,
+                   timerProgressBar: true,
+                   onOpen: (toast) => {
+                       toast.addEventListener('mouseenter', Swal.stopTimer)
+                       toast.addEventListener('mouseleave', Swal.resumeTimer)
+                   }
+               })
+            else
+                var code = #{code}
+                Swal.fire({
+                   title: 'Error!',
+                   text: 'An error occurred executing the operation.',
+                   footer: '<a href="/docs#'+ code +'">Why do I have this issue?</a>',
+                   toast: true,
+                   icon: 'error',
+                   position: 'top-end',
+                   showConfirmButton: false,
+                   timer: 3000,
+                   timerProgressBar: true,
+                   onOpen: (toast) => {
+                       toast.addEventListener('mouseenter', Swal.stopTimer)
+                       toast.addEventListener('mouseleave', Swal.resumeTimer)
+                   }
+                })
+        }
+    script(type='text/javascript').
+        function confirm(host)
+        {
+            Swal.fire({
+                  title: 'Are you sure?',
+                  text: "You won't be able to revert this!",
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+              if (result.value) {
+                window.location.replace("/host-delete?hostname=" + host);
+              }
+              else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire({
+                    title: 'Canceled',
+                    text: "Host elimination aborted.",
+                    icon: 'success',
+                    timer: 1000,
+                    timerProgressBar: true
+                  })
+              }
+            })
+        }
+        function deploy_confirm(host)
+        {
+            Swal.fire({
+                  title: 'Are you sure?',
+                  text: "Once you deployed the client host will be under control of SKDC. only user defined in access management will be able to log in into this machine!",
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Yes, deploy it!'
+            }).then((result) => {
+              if (result.value) {
+                window.location.replace("/host-cli-deploy?hostname=" + host);
+              }
+              else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire({
+                    title: 'Canceled',
+                    text: "Client deployment aborted.",
+                    icon: 'success',
+                    timer: 1000,
+                    timerProgressBar: true
+                  })
+              }
+            })
+        }
+    block specific-js
+        script(src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js")
+        script(src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js")
+        link(rel='stylesheet', type='text/css', href='https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css')
+        script(type='text/javascript').
+            $('#sampleTable').DataTable({
+                searching: true,
+                ordering: true,
+                autoWidth: true,
+                smart: false,
+                drawCallback: function() {
+                    $('[data-toggle="popover"]').popover({ trigger: "hover" });
+                }  
+            });
+        
+        

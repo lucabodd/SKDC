@@ -1,0 +1,185 @@
+extends layouts/layout
+
+block variables
+    - var activePage = 'dashboard'
+    - var activeGroup = 'none'
+
+block content
+    .app-title
+        div
+            h1
+                i.fa.fa-dashboard
+                |  Quick Start
+            p Change your password
+
+        ul.app-breadcrumb.breadcrumb
+            li.breadcrumb-item
+                i.fa.fa-home.fa-lg
+            li.breadcrumb-item
+                a(href='#') Dashboard
+    
+    if role == 'admin'
+        .row
+            .col-md-6.col-lg-3
+                .widget-small.primary.coloured-icon
+                    i.icon.fa.fa-user.fa-3x
+                    div.info
+                        h4 Users
+                        p
+                            b #{users_count}
+
+            .col-md-6.col-lg-3
+                .widget-small.info.coloured-icon
+                    i.icon.fa.fa-users.fa-3x
+                    div.info
+                        h4 Groups
+                        p
+                            b #{groups_count}
+
+            .col-md-6.col-lg-3
+                .widget-small.warning.coloured-icon
+                    i.icon.fa.fa-server.fa-3x
+                    div.info
+                        h4 Hosts
+                        p
+                            b #{hosts_count}
+
+            .col-md-6.col-lg-3
+                .widget-small.danger.coloured-icon
+                    i.icon.fa.fa-cubes.fa-3x
+                    div.info
+                        h4 Clusters
+                        p
+                            b #{clusters_count}
+                            
+    .row
+        .col-md-12
+            .tile
+                h3.tile-title(id="chpwd") Password Requirements:
+                    .tile-body
+                p
+                    |Choose your password carefully, it must not be too simple to guess and to hard to remember... Password must have
+                    ul
+                        li Min 8 characters and Max 100
+                        li Must contain at least one uppercase character
+                        li Must contain at least one lowercase character
+                        li Must contain at least one digit
+                        li Must NOT contain spaces
+                        li Must contain a special character
+
+    if role != 'user'
+        if otp_secret != true
+            .row
+                .col-md-12
+                    .tile
+                        h3.tile-title Setup Authenticator
+                        .tile-body
+                        p 
+                            |In order to unlock, setup or update your SSH public key, you need to setup google authenticator on your phone.
+                            |download Google Authenticator on your Android/iOS device, scan this QRcode, and once you are done click on save button below.
+                            br
+                            |Scanning this QR you will be able to generate an OTP that allows you to manage your SSH key in 'Manage SSH Key' page
+                        div(align="center")
+                            img(src=otp_qr)
+                            div(align="center").col-md-3.row
+                                div.col
+                                    button.btn.btn-primary.mx-auto(onclick="confirm('"+otp_secret+"');")
+                                        i.fa.fa-fw.fa-lg.fa-save
+                                        | Save
+                                div.col
+                                    button.btn.btn-primary.mx-auto(onclick="window.location.reload();")
+                                        i.fa.fa-fw.fa-lg.fa-redo
+                                        | Re-gen
+            
+        else
+            .row
+                .col-md-12
+                    .tile
+                        h3.tile-title Authenticator setup already done
+                        .tile-body
+                        p 
+                            |Now you can manage your public keys 
+                            a(href='/key-mgmt') here
+    
+    .row
+        .col-md-12
+            .tile
+                h3.tile-title(id="chpwd") Change password
+                .tile-body
+                    form(action="/password-change", method="POST").row
+                        .form-group.col-md-3
+                            label.control-label Old Password
+                            input.form-control(type="password", name="oldpassword",placeholder="Enter old password" required)
+                        .form-group.col-md-3
+                            label.control-label New Password
+                            input.form-control(type="password", name="newpassword",placeholder="Enter new password" required)
+                        .form-group.col-md-3
+                            label.control-label Confirm New Password
+                            input.form-control(type="password", name="confirmnewpassword",placeholder="Confirm new password" required)
+                        .form-group.col-md-3.align-self-end
+                            button.btn.btn-primary(type="submit")
+                                i.fa.fa-fw.fa-lg.fa-redo
+                                | Change Password
+
+
+    script(type='text/javascript').
+        var err = #{error}
+        if (err != undefined) {
+            if (!err)
+                Swal.fire({
+                   title: 'Done! Task completed successfully',
+                   toast: true,
+                   icon: 'success',
+                   position: 'top-end',
+                   showConfirmButton: false,
+                   timer: 3000,
+                   timerProgressBar: true,
+                   onOpen: (toast) => {
+                       toast.addEventListener('mouseenter', Swal.stopTimer)
+                       toast.addEventListener('mouseleave', Swal.resumeTimer)
+                   }
+               })
+            else
+                var code = #{code}
+                Swal.fire({
+                   title: 'Error!',
+                   text: 'An error occurred executing the operation.',
+                   footer: '<a href="/docs#'+ code +'">Why do I have this issue?</a>',
+                   toast: true,
+                   icon: 'error',
+                   position: 'top-end',
+                   showConfirmButton: false,
+                   timer: 3000,
+                   timerProgressBar: true,
+                   onOpen: (toast) => {
+                       toast.addEventListener('mouseenter', Swal.stopTimer)
+                       toast.addEventListener('mouseleave', Swal.resumeTimer)
+                   }
+                })
+        }
+    script(type='text/javascript').
+        function confirm(otp_secret)
+        {
+            Swal.fire({
+                  title: 'Are you sure?',
+                  text: "Please, Make sure you correctly setup google authenticator, you won't be able to setup a new OTP till password expiration",
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Yes, I did it!'
+            }).then((result) => {
+              if (result.value) {
+                window.location.replace("/key-save-otp-secret?otp_secret=" + otp_secret);
+              }
+              else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire({
+                    title: 'Canceled',
+                    text: "OTP setup aborted.",
+                    icon: 'success',
+                    timer: 1000,
+                    timerProgressBar: true
+                  })
+              }
+            })
+        }

@@ -1,0 +1,62 @@
+.app-sidebar__overlay(data-toggle="sidebar")
+aside.app-sidebar
+
+	.app-sidebar__user
+		<!-- img.app-sidebar__user-avatar(src='https://s3.amazonaws.com/uifaces/faces/twitter/jsa/48.jpg', alt='User Image') -->
+		div
+			p.app-sidebar__user-name #{username}
+			p.app-sidebar__user-designation #{role}
+	<!-- Sidebar list -->
+	ul.app-menu
+		<!-- Dashboard -->
+		li
+			a.app-menu__item(href='/' class={'active': activePage == 'dashboard'})
+				i.app-menu__icon.fa.fa-bolt
+				span.app-menu__label Quick Start
+		<!-- Dashboard END -->
+		li
+			a.app-menu__item(href='/key-mgmt' class={'active': activePage == 'key-mgmt'})
+				i.app-menu__icon.fa.fa-key
+				span.app-menu__label Upload SSH Key
+		<!-- User list -->
+		li.treeview(class={'is-expanded': activeGroup == 'users'})
+			a.app-menu__item(href='#', data-toggle='treeview')
+				i.app-menu__icon.fa.fa-user-circle
+				span.app-menu__label Users
+				i.treeview-indicator.fa.fa-angle-right
+			ul.treeview-menu
+				li
+					a.treeview-item(href='user-mgmt' class={'active': activePage == 'user-mgmt'})
+						i.icon.fa.fa-id-card
+						|  Manage Users
+				li
+					a.treeview-item(href='user-groups' class={'active': activePage == 'user-groups'})
+						i.icon.fa.fa-users
+						|  Manage Groups
+				li
+					a.treeview-item(href='user-roles' class={'active': activePage == 'user-roles'})
+						i.icon.fa.fa-user-tag
+						|  Manage Roles
+		<!-- User list END -->
+		<!-- Host List -->
+		li.treeview(class={'is-expanded': activeGroup == 'hosts'})
+			a.app-menu__item(href='#', data-toggle='treeview')
+				i.app-menu__icon.fa.fa-server
+				span.app-menu__label Hosts
+				i.treeview-indicator.fa.fa-angle-right
+			ul.treeview-menu
+				li
+					a.treeview-item(href='host-mgmt' class={'active': activePage == 'host-mgmt'})
+						i.icon.fa.fa-hdd
+						|  Manage Hosts
+				li
+					a.treeview-item(href='host-groups' class={'active': activePage == 'host-groups'})
+						i.icon.fa.fa-cubes
+						|  Manage Clusters (Hostgroups)
+		<!-- Host List END-->
+		<!-- Access list -->
+		li
+			a.app-menu__item(href='/access-mgmt' class={'active': activePage == 'access'})
+				i.app-menu__icon.fa.fa-user-shield
+				span.app-menu__label Manage Access
+		<!-- Access list END -->

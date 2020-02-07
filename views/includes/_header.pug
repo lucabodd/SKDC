@@ -1,0 +1,24 @@
+header.app-header
+	a.app-header__logo(href='/')
+		i.icon.fa.fa-key
+		| SKDC
+
+	// Sidebar toggle button
+	a.app-sidebar__toggle(href='#', data-toggle='sidebar', aria-label="Hide Sidebar" align="center")
+
+
+	// Navbar Right Menu
+	ul.app-nav
+		// User Menu
+		li.dropdown
+			a.app-nav__item(href='#', data-toggle='dropdown' aria-label="Open Profile Menu")
+				i.fa.fa-user.fa-bars
+			ul.dropdown-menu.settings-menu.dropdown-menu-right
+				li
+					a.dropdown-item(href='/#chpwd')
+						i.fa.fa-lock.fa-lg
+						|  Change Password
+				li
+					a.dropdown-item(href='/login')
+						i.fa.fa-sign-out-alt.fa-lg
+						|  Logout

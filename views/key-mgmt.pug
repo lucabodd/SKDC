@@ -1,0 +1,124 @@
+extends layouts/layout
+
+block variables
+    - var activePage = 'key-mgmt'
+    - var activeGroup = 'none'
+
+block content
+    .app-title
+        div
+            h1
+                i.fa.fa-dashboard
+                |  Quick Start
+            p Upload your SSH public key
+
+                                
+    .row
+        .col-md-12
+            .tile
+                h3.tile-title SSH keypair generation
+                p Please, use the following procedure to generate an RSA keypair:
+                ul
+                    li #{sys_username}@localhost~> ssh-keygen -t rsa -b 4096 -C #{sys_username}
+                    li and paste below the content of your id_rsa.pub
+                    
+    .row
+        .col-md-12
+            .tile
+                h3.tile-title Unlock SSH Public Key
+                .tile-body
+                p To starting access server via ssh unlock your SSH Key using google Authenticator
+                form(action="/key-unlock", method="POST").row
+                    div.form-group.mx-auto
+                        input(type="text" name="otp" id="pincode-input")
+                                    
+    .row
+        .col-md-12
+            .tile
+                if pubKey
+                    h3.tile-title(id="chpwd") Update your SSH key
+                else
+                    h3.tile-title(id="chpwd") Paste your SSH key
+                .tile-body
+                    if !key_lock
+                        form(action="/key-upload", method="POST").row
+                            div.form-group.col-lg-12
+                                textarea.form-control(name="pastedPubKey" rows="8" )
+                                    |#{pubKey}
+                            div.form-group.mx-auto
+                                input(type="hidden" name="uid" value=sys_username)
+                                button.btn.btn-primary(type="submit")
+                                    if pubKey
+                                        i.fa.fa-fw.fa-lg.fa-redo
+                                        | Update key
+                                    else
+                                        i.fa.fa-fw.fa-lg.fa-upload
+                                        | Upload key
+                    else 
+                        div.alert.alert-danger
+                            b Key Locked! 
+                            | Your key is locked, you won't be able to update key or login via ssh until you unlock your key via Authenticator OTP
+
+
+    script(type='text/javascript').
+        var err = #{error}
+        if (err != undefined) {
+            if (!err)
+                Swal.fire({
+                   title: 'Done! Task completed successfully',
+                   toast: true,
+                   icon: 'success',
+                   position: 'top-end',
+                   showConfirmButton: false,
+                   timer: 3000,
+                   timerProgressBar: true,
+                   onOpen: (toast) => {
+                       toast.addEventListener('mouseenter', Swal.stopTimer)
+                       toast.addEventListener('mouseleave', Swal.resumeTimer)
+                   }
+               })
+            else
+                var code = #{code}
+                Swal.fire({
+                   title: 'Error!',
+                   text: 'An error occurred executing the operation.',
+                   footer: '<a href="/docs#'+ code +'">Why do I have this issue?</a>',
+                   toast: true,
+                   icon: 'error',
+                   position: 'top-end',
+                   showConfirmButton: false,
+                   timer: 3000,
+                   timerProgressBar: true,
+                   onOpen: (toast) => {
+                       toast.addEventListener('mouseenter', Swal.stopTimer)
+                       toast.addEventListener('mouseleave', Swal.resumeTimer)
+                   }
+                })
+        }
+    script(src='javascripts/bootstrap-pincode-input.js')
+    script(type='text/javascript').
+        $('#pincode-input').pincodeInput({inputs:6,hidedigits:false,complete:function(value, e, errorElement){
+              let timerInterval
+              Swal.fire({
+                title: 'Unlocking key!',
+                text: 'processing...',
+                timer: 3000,
+                timerProgressBar: true,
+                onBeforeOpen: () => {
+                  Swal.showLoading()
+                  timerInterval = setInterval(() => {
+                    const content = Swal.getContent()
+                    if (content) {
+                      const b = content.querySelector('b')
+                      if (b) {
+                        b.textContent = Swal.getTimerLeft()
+                      }
+                    }
+                  }, 100)
+                  window.location.replace("/key-unlock?otp="+value);
+                },
+                onClose: () => {
+                  clearInterval(timerInterval)
+                }
+              })
+        }});

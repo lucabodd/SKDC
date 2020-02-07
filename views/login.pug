@@ -1,0 +1,64 @@
+doctype html
+html
+    head
+        include includes/_head.pug
+        title Login - SKDC
+
+    body
+        section.material-half-bg
+            .cover
+
+        section.login-content
+            .logo: h1
+                i.icon.fa.fa-key
+                | SKDC
+
+            .login-box
+                if unauth
+                    div.alert.alert-danger.alert-dismissible.fade.show E-mail or password is incorrect, please try again
+                form.login-form(method='POST' action='/auth')
+                    h3.login-head
+                        i.fa.fa-lg.fa-fw.fa-user
+                        | SIGN IN
+                    .form-group
+                        label.control-label USERNAME
+                        input.form-control(type='text', placeholder='name.surname' name='sys_username')
+
+                    .form-group
+                        label.control-label PASSWORD
+                        input.form-control(type='password' name='password')
+
+                    .form-group
+                        .utility
+                            p.semibold-text.mb-2
+                                a(href="#" data-toggle="flip") Forgot Password ?
+
+                    .form-group.btn-container
+                        button.btn.btn-primary.btn-block
+                            i.fa.fa-sign-in.fa-lg.fa-fw
+                            | SIGN IN
+                form.forget-form(action="/password-reset" method="POST")
+                    h3.login-head
+                        i.fa.fa-lg.fa-fw.fa-lock
+                        | Forgot Password ?
+                    .form-group
+                            label.control-label USERNAME
+                            input.form-control(type="text", placeholder="name.surname" name="sys_username")
+
+                    .form-group.btn-container
+                        button.btn.btn-primary.btn-block(type="submit")
+                            i.fa.fa-unlock.fa-lg.fa-fw
+                            | RESET
+
+                    .form-group.mt-3
+                        p.semibold-text.mb-0
+                            a(href="#" data-toggle="flip") <i class="fa fa-angle-left fa-fw"></i> Back to Login
+
+        include includes/_javascript.pug
+
+        script(type="text/javascript").
+            // Login Page Flipbox control
+            $('.login-content [data-toggle="flip"]').click(function () {
+                $('.login-box').toggleClass('flipped');
+                return false;
+            });

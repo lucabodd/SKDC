@@ -1,0 +1,32 @@
+doctype html
+html(lang="en")
+
+    //- Variables to set active page in sidebar
+    block variables
+        - var activePage = 'none'
+        - var activeGroup = 'none'
+
+    head
+        meta(name="description", content="SSH Key Distribution Center, non-SPOF SSO for SSH")
+
+        block title
+            title SKDC - Manage
+
+        include ../includes/_head.pug
+
+    body.app.sidebar-mini.rtl
+        // Navbar
+        include ../includes/_header.pug
+        // Sidebar menu
+        if role == 'user'
+            include ../includes/_sidebar-user.pug
+        else if role == 'technician'
+            include ../includes/_sidebar-technician.pug
+        else if role == 'admin'
+            include ../includes/_sidebar-admin.pug
+
+        main.app-content
+            block content
+
+        //- Javascripts
+        include ../includes/_javascript.pug

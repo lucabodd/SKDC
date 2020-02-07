@@ -1,0 +1,16 @@
+doctype html
+html(lang="en")
+
+	//- Variables to set active page in sidebar
+	block variables
+		- var activePage = 'dashboard'
+		- var activeGroup = 'none'
+
+	head
+		block title
+			title SKDC
+
+		include ../includes/_head.pug
+	body.mx-auto.app-content-edited
+		main
+			block content
