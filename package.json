@@ -1,10 +1,10 @@
 {
   "name": "SKDC",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "SSH Key Distribution Center",
   "main": "app.js",
   "dependencies": {
-    "base32-decode": "^1.0.0", 
+    "base32-decode": "^1.0.0",
     "bootstrap-pincode-input": "^1.7.0",
     "bootstrap-select": "^1.13.12",
     "cookie-parser": "^1.4.4",

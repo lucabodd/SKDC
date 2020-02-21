@@ -7,7 +7,12 @@ MongoClient.connect(url, function(err, db) {
     dbo = db.db("SKDC");
     dbo.createCollection("users", function (err, res) {
         if (err) throw err;
-        console.log("Collection Created Succesfully!");
+        console.log("Users collection Created Succesfully!");
+        db.close();
+    });
+    dbo.createCollection("groups", function (err, res) {
+        if (err) throw err;
+        console.log("Users collection Created Succesfully!");
         db.close();
     });
 });

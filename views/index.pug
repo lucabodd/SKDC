@@ -29,7 +29,7 @@ block content
                             b #{users_count}
 
             .col-md-6.col-lg-3
-                .widget-small.info.coloured-icon
+                .widget-small.primary.coloured-icon
                     i.icon.fa.fa-users.fa-3x
                     div.info
                         h4 Groups
@@ -45,13 +45,33 @@ block content
                             b #{hosts_count}
 
             .col-md-6.col-lg-3
-                .widget-small.danger.coloured-icon
+                .widget-small.warning.coloured-icon
                     i.icon.fa.fa-cubes.fa-3x
                     div.info
                         h4 Clusters
                         p
                             b #{clusters_count}
-                            
+    
+    .row
+        .col-md-12
+            .tile
+                h3.tile-title(id="chpwd") Change password
+                .tile-body
+                    form(action="/password-change", method="POST").row
+                        .form-group.col-md-3
+                            label.control-label Old Password
+                            input.form-control(type="password", name="oldpassword",placeholder="Enter old password" required)
+                        .form-group.col-md-3
+                            label.control-label New Password
+                            input.form-control(type="password", name="newpassword",placeholder="Enter new password" required)
+                        .form-group.col-md-3
+                            label.control-label Confirm New Password
+                            input.form-control(type="password", name="confirmnewpassword",placeholder="Confirm new password" required)
+                        .form-group.col-md-3.align-self-end
+                            button.btn.btn-primary(type="submit")
+                                i.fa.fa-fw.fa-lg.fa-redo
+                                | Change Password
+                        
     .row
         .col-md-12
             .tile
@@ -100,26 +120,6 @@ block content
                         p 
                             |Now you can manage your public keys 
                             a(href='/key-mgmt') here
-    
-    .row
-        .col-md-12
-            .tile
-                h3.tile-title(id="chpwd") Change password
-                .tile-body
-                    form(action="/password-change", method="POST").row
-                        .form-group.col-md-3
-                            label.control-label Old Password
-                            input.form-control(type="password", name="oldpassword",placeholder="Enter old password" required)
-                        .form-group.col-md-3
-                            label.control-label New Password
-                            input.form-control(type="password", name="newpassword",placeholder="Enter new password" required)
-                        .form-group.col-md-3
-                            label.control-label Confirm New Password
-                            input.form-control(type="password", name="confirmnewpassword",placeholder="Confirm new password" required)
-                        .form-group.col-md-3.align-self-end
-                            button.btn.btn-primary(type="submit")
-                                i.fa.fa-fw.fa-lg.fa-redo
-                                | Change Password
 
 
     script(type='text/javascript').

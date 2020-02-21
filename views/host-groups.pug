@@ -29,7 +29,7 @@ block content
 
     .row
         .col-md-4
-            .widget-small.info.coloured-icon
+            .widget-small.primary.coloured-icon
                 i.icon.fa.fa-plus.fa-3x
                 div.info
                     h4 Add New Cluster
@@ -39,10 +39,10 @@ block content
                                 div.col-sm-10
                                     input.form-control(type='text', placeholder='Name' name='cluster_name' required)
                                 div.col-sm-2
-                                    button.btn.btn-info
+                                    button.btn.btn-primary
                                         i.fa.fa-plus
         .col-md-4
-            .widget-small.warning.coloured-icon
+            .widget-small.primary.coloured-icon
                 i.icon.fa.fa-link.fa-3x
                 div.info
                     h4 Add Host to Cluster
@@ -73,7 +73,7 @@ block content
                                             each val in clusters
                                                 option(value=val.name)=val.name
                                 div.col-sm-2
-                                    button.btn.btn-warning
+                                    button.btn.btn-primary
                                         i.fa.fa-link
         .col-md-4
             .widget-small.danger.coloured-icon

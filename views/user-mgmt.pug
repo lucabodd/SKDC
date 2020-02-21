@@ -39,7 +39,7 @@ block content
     
     .row
         .col-md-12
-            .widget-small.info.coloured-icon
+            .widget-small.primary.coloured-icon
                 i.icon.fa.fa-plus.fa-3x
                 div.info
                     h4 Add New User
@@ -79,7 +79,7 @@ block content
                                             each val in groups
                                                 option(value=val.name)=val.name
                                 div.col-sm-2
-                                    button.btn.btn-info
+                                    button.btn.btn-primary
                                         i.fa.fa-plus
 
     <!-- user info bar ENDS -->
@@ -108,10 +108,10 @@ block content
                                         td=u.group
                                         if u.pwdAccountLockedTime
                                             td(style="width:  2%").mx-auto
-                                                button.btn.btn-success.fa.fa-unlock(onclick="location.href='/user-unlock?sys_username=" + u.sys_username + "&email="+ u.email +"'")
+                                                button.btn.btn-warning.fa.fa-lock(type='button' title='' data-container='body' data-toggle='popover' data-placement='left' data-content='User is locked. Locked occurred in ts: '+u.pwdAccountLockedTime+'. click to unclock' data-original-title='Locked' onclick="location.href='/user-unlock?sys_username=" + u.sys_username + "&email="+ u.email +"'")
                                         else
                                             td(style="width:  2%").mx-auto
-                                                button.btn.btn-warning.fa.fa-lock(onclick="location.href='/user-lock?sys_username=" + u.sys_username + "&email="+ u.email +"'")
+                                                button.btn.btn-success.fa.fa-unlock(type='button' title='' data-container='body' data-toggle='popover' data-placement='left' data-content='User is not locked. click to lock' data-original-title='Unlocked' onclick="location.href='/user-lock?sys_username=" + u.sys_username + "&email="+ u.email +"'")
                                         //key status
                                         if u.pubKey 
                                             td(style="width:  2%").mx-auto

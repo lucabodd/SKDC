@@ -202,11 +202,8 @@ LOOP:
 			//gen xlsx
 		    cmd := exec.Command("/usr/local/bin/python3", "slowtasks/report.py")
 		    err = cmd.Run()
-		    if err != nil {
-		        log.Fatalf("[-] Error generating .xlsx report, task failed with %s\n", err)
-		    } else {
-		        log.Println("[+] .xlsx report generated successfully")
-		    }
+			check(err)
+		    log.Println("[+] .xlsx report generated successfully")
 			t1=time.Now()
 			t2=time.Now()
 			t3=time.Now()
@@ -286,7 +283,7 @@ func ansibleInventoryGenerator(mdb *mongo.Client, mongo_instance string, skdc_di
 	clusters := mdb.Database(mongo_instance).Collection("clusters")
 
 	cur, err := clusters.Find(context.TODO(), bson.D{{}}, findOptions)
-	if err != nil { log.Fatal(err) }
+	check(err)
 	defer cur.Close(context.TODO())
 	for cur.Next(context.TODO()) {
 	   var cluster Cluster
@@ -312,7 +309,7 @@ func ansibleInventoryGenerator(mdb *mongo.Client, mongo_instance string, skdc_di
 	for cur.Next(context.TODO()) {
 		var host Host
 		err := cur.Decode(&host)
- 	   	if err != nil { log.Fatal(err) }
+ 	   	check(err)
  	   	bc, err := f.WriteString(host.Hostname+"\n")
 		check(err)
 		bt += bc
@@ -338,7 +335,7 @@ func sshdConfigDeploy(mdb *mongo.Client, mongo_instance string, skdc_user string
 
 	// Get all Hosts
 	var res_hosts []*Host
-	findOptProj := options.Find().SetProjection(bson.M{"hostname": 1})
+	findOptProj := options.Find().SetProjection(bson.M{"hostname": 1, "port": 1})
 	cur, err := hosts.Find(context.TODO(), bson.D{{}}, findOptProj)
 	check(err)
 	defer cur.Close(context.TODO())
@@ -367,7 +364,7 @@ func sshdConfigDeploy(mdb *mongo.Client, mongo_instance string, skdc_user string
 		check(err)
 
 		//find admins (Has system wide access)
-		findOptProj := options.Find().SetProjection(bson.D{{"sys_username", 1}})
+		findOptProj := options.Find().SetProjection(bson.M{"sys_username": 1})
 		cur, err = users.Find(context.TODO(), bson.M{"role":"admin"}, findOptProj)
 		defer cur.Close(context.TODO())
 		for cur.Next(context.TODO()) {
@@ -485,11 +482,8 @@ func skdcWardDeploy(mdb *mongo.Client, mongo_instance string, skdc_user string, 
 		}
 
 		err = playbook.Run()
-		if err != nil {
-			log.Println(stdout.String())
-		} else{
-			log.Println("    |- client deployed to: "+h.Hostname)
-		}
+		check(err)
+		log.Println("    |- client deployed to: "+h.Hostname)
 		_, err = hosts.UpdateOne(context.TODO(), bson.M{"hostname":h.Hostname }, bson.M{ "$unset": bson.M{ "deploy_req" : 1}})
 		check(err)
 	}
@@ -625,17 +619,14 @@ func encrypt(key []byte, text string) string {
 	plaintext := []byte(text)
 
 	block, err := aes.NewCipher(key)
-	if err != nil {
-		panic(err)
-	}
+	check(err)
 
 	// The IV needs to be unique, but not secure. Therefore it's common to
 	// include it at the beginning of the ciphertext.
 	ciphertext := make([]byte, aes.BlockSize+len(plaintext))
 	iv := ciphertext[:aes.BlockSize]
-	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
-		panic(err)
-	}
+	_, err = io.ReadFull(rand.Reader, iv)
+	check(err)
 
 	stream := cipher.NewCFBEncrypter(block, iv)
 	stream.XORKeyStream(ciphertext[aes.BlockSize:], plaintext)
@@ -651,14 +642,10 @@ func AESdecrypt(keyStr string, cryptoText string) string {
 // decrypt from base64 to decrypted string
 func decrypt(key []byte, cryptoText string) string {
 	ciphertext, err := base64.StdEncoding.DecodeString(cryptoText)
-	if err != nil {
-		panic(err)
-	}
+	check(err)
 
 	block, err := aes.NewCipher(key)
-	if err != nil {
-		panic(err)
-	}
+	check(err)
 
 	// The IV needs to be unique, but not secure. Therefore it's common to
 	// include it at the beginning of the ciphertext.
@@ -678,13 +665,7 @@ func decrypt(key []byte, cryptoText string) string {
 ****************************************/
 
 func timeHoursDiff(date string) (int) {
-    timeFormat := "2006-01-02 15:04 UTC"
-	year := date[0:4]
-	month := date[4:6]
-	day := date[6:8]
-	hours := date[8:10]
-	minutes := date[10:12]
-	date = year+"-"+month+"-"+day+" "+hours+":"+minutes+" UTC"
+    timeFormat := "20060102150405Z"
 	then, err := time.Parse(timeFormat, date)
     check(err)
     duration := time.Since(then)
@@ -692,13 +673,7 @@ func timeHoursDiff(date string) (int) {
 }
 
 func timeDaysDiff(date string) (int) {
-    timeFormat := "2006-01-02 15:04 UTC"
-	year := date[0:4]
-	month := date[4:6]
-	day := date[6:8]
-	hours := date[8:10]
-	minutes := date[10:12]
-	date = year+"-"+month+"-"+day+" "+hours+":"+minutes+" UTC"
+    timeFormat := "20060102150405Z"
 	then, err := time.Parse(timeFormat, date)
     check(err)
     duration := time.Since(then)
@@ -709,24 +684,18 @@ func SendMail(addr, from, subject, body string, to []string) error {
 	r := strings.NewReplacer("\r\n", "", "\r", "", "\n", "", "%0a", "", "%0d", "")
 
 	c, err := smtp.Dial(addr)
-	if err != nil {
-		return err
-	}
+	check(err)
 	defer c.Close()
-	if err = c.Mail(r.Replace(from)); err != nil {
-		return err
-	}
+	err = c.Mail(r.Replace(from))
+	check(err)
 	for i := range to {
 		to[i] = r.Replace(to[i])
-		if err = c.Rcpt(to[i]); err != nil {
-			return err
-		}
+		err = c.Rcpt(to[i])
+		check(err)
 	}
 
 	w, err := c.Data()
-	if err != nil {
-		return err
-	}
+	check(err)
 
 	msg := "To: " + strings.Join(to, ",") + "\r\n" +
 		"From: " + from + "\r\n" +
@@ -736,13 +705,9 @@ func SendMail(addr, from, subject, body string, to []string) error {
 		"\r\n" + base64.StdEncoding.EncodeToString([]byte(body))
 
 	_, err = w.Write([]byte(msg))
-	if err != nil {
-		return err
-	}
+	check(err)
 	err = w.Close()
-	if err != nil {
-		return err
-	}
+	check(err)
 	return c.Quit()
 }
 

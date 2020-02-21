@@ -68,7 +68,7 @@ block content
                                                 option(value=val.hostname)=val.hostname
                                 
                                 div.col
-                                    button.btn.btn-info
+                                    button.btn.btn-primary
                                         i.fa.fa-plus
 
     <!-- user info bar ENDS -->
@@ -98,7 +98,7 @@ block content
                                         td=h.cluster
                                         if h.connection == 'TRUE'
                                             td(style="width:  2%").mx-auto
-                                                button.btn.btn-success.fa.fa-plug
+                                                button.btn.btn-success.fa.fa-plug(type='button' title='' data-container='body' data-toggle='popover' data-placement='left' data-content='Click to schedule skdc client update' data-original-title='Connected' onclick="deploy_confirm('"+h.hostname+"');")
                                         else 
                                             if h.connection == 'SUDOERR' 
                                                 td(style="width:  2%").mx-auto

@@ -27,6 +27,10 @@ var aes_256_cfb = new AES_256_CFB();
 //Base 32 decode otp secret
 const base32Decode = require('base32-decode')
 
+//Time format
+var ZT = require("../modules/ztime");
+var ztime = new ZT();
+
 //Authenticator
 var speakeasy = require("speakeasy");
 
@@ -118,17 +122,13 @@ router.get('/key-unlock', function (req, res, next) {
                             });
                             if(verified){
                                 req.session.key_lock = false;
-                                var now = new Date();
-                                mdb.updDocument("users", {email: req.session.email}, {$set: { key_last_unlock: now.toISOString().replace(/-/g,"").replace("T","").replace(/:/g,"").slice(0,-5)+"Z" }})
+                                mdb.updDocument("users", {email: req.session.email}, {$set: { key_last_unlock: ztime.current() }})
                                     .then(
                                         function(){
                                             //at first unlock key_last_unlock attribute is undefined
                                             if (user.key_last_unlock == undefined)
-                                                key_last_unlock = new Date();
-                                            else
-                                                key_last_unlock = new Date(user.key_last_unlock.slice(4,6)+"/"+user.key_last_unlock.slice(6,8)+"/"+user.key_last_unlock.slice(0,4)+" "+user.key_last_unlock.slice(8,10)+":"+user.key_last_unlock.slice(10,12));
-                                            diffTime = Math.abs(now - key_last_unlock);
-                                            diffHours = Math.ceil(diffTime / (1000 * 60 * 60));
+                                                user.key_last_unlock = ztime.current()
+                                            diffHours = ztime.hoursDiff(user.key_last_unlock);
 
                                             //if less than 9 means 1 decryption has already been performed, no decryption needed
                                             if(diffHours<9)
