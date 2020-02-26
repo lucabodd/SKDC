@@ -25,11 +25,9 @@ user roles
 
 v1.3.0
 settings page & alarms, logo and favicon
+settings customizable key expire
+config LDIF (see what can be removed) settings?
 
 v2.0.0
-config LDIF (see what can be removed) settings?
+crtpted etc files
 systemd password prompt
-client shared secret
-
-
-ldap multimirror conf
