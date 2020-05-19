@@ -3,10 +3,14 @@ the following instructions will guide you trough setting up a ldap cluster in mi
 
 ## Steps
 ### Create cert dir
-``` mkdir -p /etc/ssl/openldap/{private,certs,newcerts} ```
+``` 
+mkdir -p /etc/ssl/openldap/{private,certs,newcerts} 
+```
 
 ### edit opessl.conf
-``` vim /usr/lib/ssl/openssl.cnf ```
+``` 
+vim /usr/lib/ssl/openssl.cnf 
+```
 and add dir line like
 ```
 ...
@@ -31,7 +35,9 @@ openssl rsa -in /etc/ssl/openldap/private/cakey.pem -out /etc/ssl/openldap/priva
 ```
 
 ### Create the CA certificate. Be sure to set the common to match your server FQDN.
-```openssl req -new -x509 -days 3650 -key /etc/ssl/openldap/private/cakey.pem -out /etc/ssl/openldap/certs/cacert.pem```
+```
+openssl req -new -x509 -days 3650 -key /etc/ssl/openldap/private/cakey.pem -out /etc/ssl/openldap/certs/cacert.pem
+```
 
 ### Generate LDAP server key;
 ```
