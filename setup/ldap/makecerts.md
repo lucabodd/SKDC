@@ -7,6 +7,7 @@ the following instructions will guide you trough setting up a ldap cluster in mi
 
 ###edit opessl.conf
 ``` vim /usr/lib/ssl/openssl.cnf ```
+and add dir line like
 ```
 ...
 [ CA_default ]
