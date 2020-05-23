@@ -85,10 +85,6 @@ type User struct {
 }
 
 func main() {
-	//set ansible env vars
-	os.Setenv("ANSIBLE_STDOUT_CALLBACK", "json")
-	os.Setenv("ANSIBLE_HOST_KEY_CHECKING", "False")
-
 	//parsing flags
 	c := flag.String("c", "","Specify the configuration file.")
     flag.Parse()

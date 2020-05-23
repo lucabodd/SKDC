@@ -27,8 +27,8 @@ function LDAP(configObj){
         url: configObj.uri,
         tlsOptions: {
             'ca': fs.readFileSync(configObj.TLS.CA),
-            'key': fs.readFileSync(configObj.TLS.KEY),
-            'cert': fs.readFileSync(configObj.TLS.CERT)
+//            'key': fs.readFileSync(configObj.TLS.KEY),
+//            'cert': fs.readFileSync(configObj.TLS.CERT)
         }
     });
     this.ldap_base_dn = configObj.base_dn;
@@ -42,7 +42,7 @@ LDAP.prototype.auth = function(uid, pwd)
 {
     var _this = this;
     return new Promise(function (resolve, reject){
-        _this.client.bind("uid="+uid+","+_this.ldap_base_users, pwd, function(err) {
+        _this.client.bind("cn="+uid+","+_this.ldap_base_users, pwd, function(err) {
             if(err){
                 log("[-] cannot auth user, reason: "+err.message,ldap_log);
                 reject(err);
@@ -109,7 +109,7 @@ LDAP.prototype.modKey = function (uid, pubKey)
                         sshPublicKey: pubKey
                     }
                 });
-                _this.client.modify("uid="+uid+","+_this.ldap_base_users, change,function(err) {
+                _this.client.modify("cn="+uid+","+_this.ldap_base_users, change,function(err) {
                     if(err){
                         log('[-] Error occurred while modifing '+ err.message,ldap_log);
                         reject(err);
@@ -143,7 +143,7 @@ LDAP.prototype.lockAccount = function (uid)
                         pwdAccountLockedTime: now.toISOString().replace(/-/g,"").replace("T","").replace(/:/g,"").slice(0,-5)+"Z"
                     }
                 });
-                _this.client.modify("uid="+uid+","+_this.ldap_base_users, change,function(err) {
+                _this.client.modify("cn="+uid+","+_this.ldap_base_users, change,function(err) {
                     if(err){
                         log('[-] Error occurred while modifing '+ err.message,ldap_log);
                         reject(err);
@@ -176,7 +176,7 @@ LDAP.prototype.unlockAccount = function (uid)
                         pwdAccountLockedTime: []
                     }
                 });
-                _this.client.modify("uid="+uid+","+_this.ldap_base_users, change,function(err) {
+                _this.client.modify("cn="+uid+","+_this.ldap_base_users, change,function(err) {
                     if(err){
                         log('[-] Error occurred while modifing '+ err.message,ldap_log);
                         reject(err);
@@ -212,7 +212,7 @@ LDAP.prototype.modPwd = function (uid, pwd)
                                 userPassword: hashes.ldap,
                             }
                         });
-                        _this.client.modify("uid="+uid+","+_this.ldap_base_users, change,function(err) {
+                        _this.client.modify("cn="+uid+","+_this.ldap_base_users, change,function(err) {
                             if(err){
                                 reject(err);
                             }
@@ -226,7 +226,7 @@ LDAP.prototype.modPwd = function (uid, pwd)
                                 sambaNTPassword: hashes.samba
                             }
                         });
-                        _this.client.modify("uid="+uid+","+_this.ldap_base_users, change,function(err) {
+                        _this.client.modify("cn="+uid+","+_this.ldap_base_users, change,function(err) {
                             if(err){
                                 reject(err);
                             }
@@ -258,7 +258,7 @@ LDAP.prototype.delUser = function (uid)
             else
             {
                 //delete user
-                _this.client.del("uid="+uid+","+_this.ldap_base_users,function(err){
+                _this.client.del("cn="+uid+","+_this.ldap_base_users,function(err){
                     if(err){
                         reject(err);
                     }
@@ -296,7 +296,7 @@ LDAP.prototype.addUser = function (uid, domain, password)
             else
             {
                 //max_uid and max_gid interrogation
-                _this.search({ scope: 'sub', filter: '(uid=*)', attributes: ['uidNumber', 'gidNumber']})
+                _this.search({ scope: 'sub', filter: '(cn=*)', attributes: ['uidNumber', 'gidNumber']})
                 .then(
                     function(res){
                         max = res[res.length-1];

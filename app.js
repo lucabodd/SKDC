@@ -10,7 +10,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var port = 3000
+var port = config.skdc.port;
 
 var indexRouter = require('./routes/index');
 var authRouter = require('./routes/login');

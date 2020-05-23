@@ -1,31 +1,32 @@
 {
     "skdc": {
+	"port": 443,
         "user": "skdc.app",
         "admin_mail": "ict@example.com",
         "dir": "/var/www/SKDC/",
         "log_dir" : "/var/log/SKDC/",
         "run_dir" : "/var/run/SKDC/",
         "SSL": {
-            "CERT": "/var/www/SKDC/ssl/https/STAR_yourcert.crt",
-            "KEY": "/var/www/SKDC/ssl/https/STAR.your.key"
+            "CERT": "/var/www/SKDC/ssl/https/certificate.pem",
+            "KEY": "/var/www/SKDC/ssl/https/key.pem"
         }
     },
     "mongo": {
-        "url": "mongodb://skdc.app:password:27017/?authMechanism=SCRAM-SHA-256&authSource=SKDC",
+        "url": "mongodb://localhost:27017/",
         "instance": "SKDC"
     },
     "ldap": {
-        "uri": "ldaps://yourserver",
+        "uri": "ldaps://ldap.kaleyra.com",
         "TLS": {
             "CA": "/var/www/SKDC/ssl/ldap/cacert.pem",
-            "KEY": "/var/www/SKDC/ssl/ldap/slap1key.pem",
-            "CERT": "/var/www/SKDC/ssl/ldap/slap1cert.pem"
+            "KEY": "/var/www/SKDC/ssl/ldap/ldapserver-cert.crt",
+            "CERT": "/var/www/SKDC/ssl/ldap/ldapserver-key.key"
         },
-        "base_dn": "dc=example,dc=it",
-        "bind_dn": "cn=admin,dc=example,dc=it",
-        "bind_password": "yourpassword",
-        "read_only_dn": "cn=admin,dc=example,dc=it",
-        "read_only_password": "yourpassword",
+        "base_dn": "dc=ldap,dc=kaleyra,dc=com",
+        "bind_dn": "cn=maicsadm,ou=users,dc=ldap,dc=kaleyra,dc=com",
+        "bind_password": "oOmiac43",
+        "read_only_dn": "cn=maicsro,ou=users,dc=ldap,dc=kaleyra,dc=com",
+        "read_only_password": "oOmiac43",
         "users_ou": "users",
         "groups_ou": "groups"
     }

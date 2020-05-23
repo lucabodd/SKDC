@@ -4,7 +4,7 @@ apt-get install -y nodejs
 
 2 _ install npm modules
 cd $SKDC_DIR
-npm install
+npm init
 
 3 - install mongo
 https://docs.mongodb.com/manual/tutorial/install-mongodb-on-debian/
@@ -24,6 +24,10 @@ su - skdc.app
 go get github.com/sevlyar/go-daemon
 cd /var/www/SKDC/daemons/
 go build skdcd.go
+
+6 - /etc/ansible/ansible.cfg
+[defaults]
+host_key_checking = False
 
 8 - /var/run/SKDC /var/log/SKDC dir and grant permission to user
 
