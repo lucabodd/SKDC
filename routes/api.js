@@ -50,6 +50,9 @@ router.get('/host-add', function (req, res, next) {
             });
 });
 
+router.get('/new', function (req, res, next) {
+    res.render('new');
+});
 /***************************************
  *          GROUP MANAGEMENT - END     *
  ***************************************/
