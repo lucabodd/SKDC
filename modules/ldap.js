@@ -26,7 +26,7 @@ function LDAP(configObj){
     this.client = ldap.createClient({
         url: configObj.uri,
         tlsOptions: {
-            'ca': fs.readFileSync(configObj.TLS.CA),
+            'ca': fs.readFileSync(configObj.TLS.CA) ,
 //            'key': fs.readFileSync(configObj.TLS.KEY),
 //            'cert': fs.readFileSync(configObj.TLS.CERT)
         }

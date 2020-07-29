@@ -16,16 +16,16 @@
         "instance": "SKDC"
     },
     "ldap": {
-        "uri": "ldaps://ldap.kaleyra.com",
+        "uri": "ldaps://ldap.maics.com",
         "TLS": {
             "CA": "/var/www/SKDC/ssl/ldap/cacert.pem",
             "KEY": "/var/www/SKDC/ssl/ldap/ldapserver-cert.crt",
             "CERT": "/var/www/SKDC/ssl/ldap/ldapserver-key.key"
         },
-        "base_dn": "dc=ldap,dc=kaleyra,dc=com",
-        "bind_dn": "cn=maicsadm,ou=users,dc=ldap,dc=kaleyra,dc=com",
+        "base_dn": "dc=ldap,dc=maics,dc=com",
+        "bind_dn": "cn=maicsadm,ou=users,dc=ldap,dc=maics,dc=com",
         "bind_password": "oOmiac43",
-        "read_only_dn": "cn=maicsro,ou=users,dc=ldap,dc=kaleyra,dc=com",
+        "read_only_dn": "cn=maicsro,ou=users,dc=ldap,dc=maics,dc=com",
         "read_only_password": "oOmiac43",
         "users_ou": "users",
         "groups_ou": "groups"
