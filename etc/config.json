@@ -3,12 +3,12 @@
 	"port": 443,
         "user": "skdc.app",
         "admin_mail": "ict@example.com",
-        "dir": "/var/www/SKDC/",
-        "log_dir" : "/var/log/SKDC/",
-        "run_dir" : "/var/run/SKDC/",
+        "dir": "/var/www/MAICS/",
+        "log_dir" : "/var/log/MAICS/",
+        "run_dir" : "/var/run/MAICS/",
         "SSL": {
-            "CERT": "/var/www/SKDC/ssl/https/certificate.pem",
-            "KEY": "/var/www/SKDC/ssl/https/key.pem"
+            "CERT": "/var/www/MAICS/ssl/https/certificate.pem",
+            "KEY": "/var/www/MAICS/ssl/https/key.pem"
         }
     },
     "mongo": {
@@ -18,9 +18,9 @@
     "ldap": {
         "uri": "ldaps://ldap.maics.com",
         "TLS": {
-            "CA": "/var/www/SKDC/ssl/ldap/cacert.pem",
-            "KEY": "/var/www/SKDC/ssl/ldap/ldapserver-cert.crt",
-            "CERT": "/var/www/SKDC/ssl/ldap/ldapserver-key.key"
+            "CA": "/var/www/MAICS/ssl/ldap/cacert.pem",
+            "KEY": "/var/www/MAICS/ssl/ldap/ldapserver-cert.crt",
+            "CERT": "/var/www/MAICS/ssl/ldap/ldapserver-key.key"
         },
         "base_dn": "dc=ldap,dc=maics,dc=com",
         "bind_dn": "cn=maicsadm,dc=ldap,dc=maics,dc=com",
