@@ -1,5 +1,5 @@
 var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017/Hypnos";
+var url = "mongodb://localhost:27017/SKDC";
 
 MongoClient.connect(url, function(err, db) {
     if (err) throw err;
@@ -18,6 +18,7 @@ MongoClient.connect(url, function(err, db) {
 });
 
 //INDEXES
+
 //db.users.createIndex( { "email": 1 }, { unique: true } );
 //db.hosts.createIndex( { "hostname": 1 }, { unique: true } );
 //db.access.createIndex( { "hostname": 1, "email":1 }, { unique: true } );
