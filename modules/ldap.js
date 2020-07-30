@@ -32,7 +32,8 @@ function LDAP(configObj){
         }
     });
     this.ldap_base_dn = configObj.base_dn;
-    this.ldap_base_users = "ou="+configObj.users_ou+","+configObj.base_dn;
+    //this.ldap_base_users = "ou="+configObj.users_ou+","+configObj.base_dn;
+    this.ldap_base_users = configObj.base_dn;
     this.ldap_base_groups = "ou="+configObj.groups_ou+","+configObj.base_dn;
     this.ldap_bind_username = configObj.bind_dn;
     this.ldap_bind_password = configObj.bind_password;

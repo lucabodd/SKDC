@@ -41,18 +41,28 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //middleware authorization for routes
-app.get('/api/*', function(req,res,next){
+app.get('/home/tech/*', function(req,res,next){
     if(!req.session.email){
         log("[*] Non logged user is trying to get host-mgmt page from: "+req.ip.replace(/f/g, "").replace(/:/g, "")+" User Agent: "+req.get('User-Agent'),app_log)
         res.render('login', {unauth: false});
     }
-    else if (req.session.role != "admin") {
-        log("[*] Non admin user is trying to access host-mgmt page from: "+req.ip.replace(/f/g, "").replace(/:/g, "")+" User Agent: "+req.get('User-Agent'),app_log)
+    else if (req.session.role == "user") {
+        log("[*] Unauthorized user is trying to access host-mgmt page from: "+req.ip.replace(/f/g, "").replace(/:/g, "")+" User Agent: "+req.get('User-Agent'),app_log)
         res.status(403)
         res.render('error', {
             message: "403",
             error: {status: "Forbidden", detail: "You are not authorized to see this page"}
         });
+    }
+    else {
+        next();
+    }
+})
+
+app.get('/home/*', function(req,res,next){
+    if(!req.session.email){
+        log("[*] Non logged user is trying to get host-mgmt page from: "+req.ip.replace(/f/g, "").replace(/:/g, "")+" User Agent: "+req.get('User-Agent'),app_log)
+        res.render('login', {unauth: false});
     }
     else {
         next();

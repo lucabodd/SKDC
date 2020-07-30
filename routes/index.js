@@ -27,11 +27,6 @@ var QRCode = require('qrcode');
 *********************************************/
 
 router.get('/', function(req, res, next) {
-    if(req.session.email == undefined){
-        log("[*] Non logged user is trying to get index page from: "+req.ip.replace(/f/g, "").replace(/:/g, "")+" User Agent: "+req.get('User-Agent'),app_log)
-        res.render('login', {unauth: false});
-    }
-    else {
         mdb.connect(mongo_instance)
         .then(
             function() {
@@ -87,7 +82,6 @@ router.get('/', function(req, res, next) {
                 res.render('error',{message: "500",  error : { status: "Service unavailable", detail : "The service you requested is temporary unvailable" }});
             }
         )
-    }
 });
 
 /* GET error page
@@ -96,13 +90,7 @@ router.get('/error', function (req, res, next) {
     res.render('error', req.query);
 });
 router.get('/docs', function (req, res, next) {
-    if(req.session.email == undefined){
-        log("[*] Non logged user is trying to get docs page, request occurred from: "+req.ip.replace(/f/g, "").replace(/:/g, "")+" User Agent: "+req.get('User-Agent'),app_log)
-        res.render('login', {unauth: false});
-    }
-    else{
         res.render('docs');
-    }
 });
 
 module.exports = router;

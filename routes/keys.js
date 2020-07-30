@@ -47,19 +47,6 @@ var speakeasy = require("speakeasy");
 /* GET user add
 *  return user add page*/
 router.get('/key-mgmt', function (req, res, next) {
-    if(req.session.email == undefined){
-        log("[*] Non logged user is trying to get key-mgmt page from: "+req.ip.replace(/f/g, "").replace(/:/g, "")+" User Agent: "+req.get('User-Agent'),app_log)
-        res.render('login', {unauth: false});
-    }
-    else if (req.session.role == "user") {
-        log("[*] Non admin user is trying to access key-mgmt page from: "+req.ip.replace(/f/g, "").replace(/:/g, "")+" User Agent: "+req.get('User-Agent'),app_log)
-        res.status(403)
-        res.render('error', {
-            message: "403",
-            error: {status: "Forbidden", detail: "You are not authorized to see this page"}
-        });
-    }
-    else {
         var err = ''
         err += req.query.error;
         mdb.connect(mongo_instance)
@@ -91,23 +78,9 @@ router.get('/key-mgmt', function (req, res, next) {
                     log('[-] Connection to MongoDB cannot be established, reason: '+err.message, app_log);
                     res.render('error',{message: "500",  error : { status: "Service unavailable", detail : "The service you requested is temporary unvailable" }});
                 });
-    }
 });
 
 router.get('/key-unlock', function (req, res, next) {
-    if(req.session.email == undefined){
-        log("[*] Non logged user is trying to get key-mgmt page from: "+req.ip.replace(/f/g, "").replace(/:/g, "")+" User Agent: "+req.get('User-Agent'),app_log)
-        res.render('login', {unauth: false});
-    }
-    else if (req.session.role == "user") {
-        log("[*] Non admin user is trying to access key-mgmt page from: "+req.ip.replace(/f/g, "").replace(/:/g, "")+" User Agent: "+req.get('User-Agent'),app_log)
-        res.status(403)
-        res.render('error', {
-            message: "403",
-            error: {status: "Forbidden", detail: "You are not authorized to see this page"}
-        });
-    }
-    else {
         var otp = req.query.otp;
         mdb.connect(mongo_instance)
         .then(
@@ -198,23 +171,9 @@ router.get('/key-unlock', function (req, res, next) {
                 res.render('error',{message: "500",  error : { status: "Service unavailable", detail : "The service you requested is temporary unvailable" }});
             }
         );
-    }
 });
 
 router.get('/key-save-otp-secret', function (req, res, next) {
-    if(req.session.email == undefined){
-        log("[*] Non logged user is trying to get key-mgmt page from: "+req.ip.replace(/f/g, "").replace(/:/g, "")+" User Agent: "+req.get('User-Agent'),app_log)
-        res.render('login', {unauth: false});
-    }
-    else if (req.session.role == "user") {
-        log("[*] Non admin user is trying to access key-mgmt page from: "+req.ip.replace(/f/g, "").replace(/:/g, "")+" User Agent: "+req.get('User-Agent'),app_log)
-        res.status(403)
-        res.render('error', {
-            message: "403",
-            error: {status: "Forbidden", detail: "You are not authorized to see this page"}
-        });
-    }
-    else {
         var secret = req.query.otp_secret;
         mdb.connect(mongo_instance)
             .then(
@@ -238,23 +197,9 @@ router.get('/key-save-otp-secret', function (req, res, next) {
                         res.render('error',{message: "500",  error : { status: "Service unavailable", detail : "The service you requested is temporary unvailable" }});
                     }
             );
-    }
 });
 
 router.post('/key-upload', function (req, res, next) {
-    if(req.session.email == undefined){
-        log("[*] Non logged user is trying to get key-mgmt page from: "+req.ip.replace(/f/g, "").replace(/:/g, "")+" User Agent: "+req.get('User-Agent'),app_log)
-        res.render('login', {unauth: false});
-    }
-    else if (req.session.role == "user") {
-        log("[*] Non admin user is trying to access key-mgmt page from: "+req.ip.replace(/f/g, "").replace(/:/g, "")+" User Agent: "+req.get('User-Agent'),app_log)
-        res.status(403)
-        res.render('error', {
-            message: "403",
-            error: {status: "Forbidden", detail: "You are not authorized to see this page"}
-        });
-    }
-    else {
         var pubKey = req.body.pastedPubKey;
         var email = req.session.email;
         var uid = req.body.uid;
@@ -281,7 +226,6 @@ router.post('/key-upload', function (req, res, next) {
                             log('[-] Connection to MongoDB cannot be established, reason: '+err.message, app_log);
                             res.render('error',{message: "500",  error : { status: "Service unavailable", detail : "The service you requested is temporary unvailable" }});
                         });
-    }
 });
 
 

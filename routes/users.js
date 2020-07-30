@@ -46,19 +46,6 @@ const mail = require('../etc/mailtemplates.json');
 /* GET user add
 *  return user add page*/
 router.get('/user-mgmt', function (req, res, next) {
-    if(req.session.email == undefined){
-        log("[*] Non logged user is trying to get host-mgmt page from: "+req.ip.replace(/f/g, "").replace(/:/g, "")+" User Agent: "+req.get('User-Agent'),app_log)
-        res.render('login', {unauth: false});
-    }
-    else if (req.session.role != "admin") {
-        log("[*] Non admin user is trying to access host-mgmt page from: "+req.ip.replace(/f/g, "").replace(/:/g, "")+" User Agent: "+req.get('User-Agent'),app_log)
-        res.status(403)
-        res.render('error', {
-            message: "403",
-            error: {status: "Forbidden", detail: "You are not authorized to see this page"}
-        });
-    }
-    else {
         var err = ''
         err += req.query.error;
         console.log(err);
@@ -91,7 +78,6 @@ router.get('/user-mgmt', function (req, res, next) {
                     log('[-] Connection to MongoDB cannot be established, reason: '+err.message, app_log);
                     res.render('error',{message: "500",  error : { status: "Service unavailable", detail : "The service you requested is temporary unvailable" }});
                 });
-    }
 });
 
 /* POST user add
@@ -100,18 +86,6 @@ router.get('/user-mgmt', function (req, res, next) {
  */
 
 router.post('/user-add', function (req, res, next) {
-    if(req.session.email == undefined){
-        log("[*] Non logged user is trying to get host-mgmt page from: "+req.ip.replace(/f/g, "").replace(/:/g, "")+" User Agent: "+req.get('User-Agent'),app_log)
-        res.render('login', {unauth: false});
-    }
-    else if (req.session.role != "admin") {
-        log("[*] Non admin user is trying to access host-mgmt page from: "+req.ip.replace(/f/g, "").replace(/:/g, "")+" User Agent: "+req.get('User-Agent'),app_log)
-        res.status(403)
-        res.render('error', {
-            message: "403",
-            error: {status: "Forbidden", detail: "You are not authorized to see this page"}
-        });
-    }
     //format system username
     var fullname = req.body.uid.split(".");
     var document = {

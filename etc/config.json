@@ -23,7 +23,7 @@
             "CERT": "/var/www/SKDC/ssl/ldap/ldapserver-key.key"
         },
         "base_dn": "dc=ldap,dc=maics,dc=com",
-        "bind_dn": "cn=maicsadm,ou=users,dc=ldap,dc=maics,dc=com",
+        "bind_dn": "cn=maicsadm,dc=ldap,dc=maics,dc=com",
         "bind_password": "oOmiac43",
         "read_only_dn": "cn=maicsro,ou=users,dc=ldap,dc=maics,dc=com",
         "read_only_password": "oOmiac43",

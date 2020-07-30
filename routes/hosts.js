@@ -32,19 +32,6 @@ const exec = require('child_process').exec
 /* GET user add
 *  return user add page*/
 router.get('/host-mgmt', function (req, res, next) {
-    if(req.session.email == undefined){
-        log("[*] Non logged user is trying to get host-mgmt page from: "+req.ip.replace(/f/g, "").replace(/:/g, "")+" User Agent: "+req.get('User-Agent'),app_log)
-        res.render('login', {unauth: false});
-    }
-    else if (req.session.role != "admin") {
-        log("[*] Non admin user is trying to access host-mgmt page from: "+req.ip.replace(/f/g, "").replace(/:/g, "")+" User Agent: "+req.get('User-Agent'),app_log)
-        res.status(403)
-        res.render('error', {
-            message: "403",
-            error: {status: "Forbidden", detail: "You are not authorized to see this page"}
-        });
-    }
-    else {
         var err = ''
         err += req.query.error;
         mdb.connect(mongo_instance)
@@ -92,7 +79,6 @@ router.get('/host-mgmt', function (req, res, next) {
                     log('[-] Connection to MongoDB cannot be established, reason: '+err.message, app_log);
                     res.render('error',{message: "500",  error : { status: "Service unavailable", detail : "The service you requested is temporary unvailable" }});
                 });
-    }
 });
 
 /* POST user add
@@ -101,19 +87,6 @@ router.get('/host-mgmt', function (req, res, next) {
  */
 
 router.post('/host-add', function (req, res, next) {
-    if(req.session.email == undefined){
-        log("[*] Non logged user is trying to get host-mgmt page from: "+req.ip.replace(/f/g, "").replace(/:/g, "")+" User Agent: "+req.get('User-Agent'),app_log)
-        res.render('login', {unauth: false});
-    }
-    else if (req.session.role != "admin") {
-        log("[*] Non admin user is trying to access host-mgmt page from: "+req.ip.replace(/f/g, "").replace(/:/g, "")+" User Agent: "+req.get('User-Agent'),app_log)
-        res.status(403)
-        res.render('error', {
-            message: "403",
-            error: {status: "Forbidden", detail: "You are not authorized to see this page"}
-        });
-    }
-    else{
         var document = {
             hostname: req.body.hostname,
             ip: req.body.ip,
@@ -144,24 +117,9 @@ router.post('/host-add', function (req, res, next) {
                     log('[-] Connection to MongoDB cannot be established, reason: '+err.message, app_log);
                     res.render('error',{message: "500",  error : { status: "Service unavailable", detail : "The service you requested is temporary unvailable" }});
                 });
-    }
-
 });
 /* Exec ansible playbook in order to deploy skdc client to selected host */
 router.get('/host-cli-deploy', function (req, res, next) {
-    if(req.session.email == undefined){
-        log("[*] Non logged user is trying to get host-mgmt page from: "+req.ip.replace(/f/g, "").replace(/:/g, "")+" User Agent: "+req.get('User-Agent'),app_log)
-        res.render('login', {unauth: false});
-    }
-    else if (req.session.role != "admin") {
-        log("[*] Non admin user is trying to access host-mgmt page from: "+req.ip.replace(/f/g, "").replace(/:/g, "")+" User Agent: "+req.get('User-Agent'),app_log)
-        res.status(403)
-        res.render('error', {
-            message: "403",
-            error: {status: "Forbidden", detail: "You are not authorized to see this page"}
-        });
-    }
-    else {
         var host = req.query.hostname;
         mdb.connect(mongo_instance)
         .then(
@@ -183,26 +141,12 @@ router.get('/host-cli-deploy', function (req, res, next) {
                 res.render('error',{message: "500",  error : { status: "Service unavailable", detail : "The service you requested is temporary unvailable" }});
             }
         )
-    }
 });
 /* GET host-delete
  * add new user in DB
  * This method generate ssh key-pair and update user entry
  */
 router.get('/host-delete', function (req, res, next) {
-    if(req.session.email == undefined){
-        log("[*] Non logged user is trying to get host-mgmt page from: "+req.ip.replace(/f/g, "").replace(/:/g, "")+" User Agent: "+req.get('User-Agent'),app_log)
-        res.render('login', {unauth: false});
-    }
-    else if (req.session.role != "admin") {
-        log("[*] Non admin user is trying to access host-mgmt page from: "+req.ip.replace(/f/g, "").replace(/:/g, "")+" User Agent: "+req.get('User-Agent'),app_log)
-        res.status(403)
-        res.render('error', {
-            message: "403",
-            error: {status: "Forbidden", detail: "You are not authorized to see this page"}
-        });
-    }
-    else {
         var host = req.query.hostname;
         mdb.connect(mongo_instance)
             .then(
@@ -223,7 +167,6 @@ router.get('/host-delete', function (req, res, next) {
                         )
                 }
             )
-    }
 });
 /***************************************
  *      HOST MANAGEMENT - END          *
@@ -237,19 +180,6 @@ router.get('/host-delete', function (req, res, next) {
 /* GET user add
  * return user add page*/
 router.get('/host-groups', function (req, res, next) {
-    if(req.session.email == undefined){
-        log("[*] Non logged user is trying to get host-mgmt page from: "+req.ip.replace(/f/g, "").replace(/:/g, "")+" User Agent: "+req.get('User-Agent'),app_log)
-        res.render('login', {unauth: false});
-    }
-    else if (req.session.role != "admin") {
-        log("[*] Non admin user is trying to access host-mgmt page from: "+req.ip.replace(/f/g, "").replace(/:/g, "")+" User Agent: "+req.get('User-Agent'),app_log)
-        res.status(403)
-        res.render('error', {
-            message: "403",
-            error: {status: "Forbidden", detail: "You are not authorized to see this page"}
-        });
-    }
-    else {
         var err = ''
         err += req.query.error;
         mdb.connect(mongo_instance)
@@ -281,25 +211,11 @@ router.get('/host-groups', function (req, res, next) {
                     log('[-] Connection to MongoDB cannot be established, reason: '+err.message, app_log);
                     res.render('error',{message: "500",  error : { status: "Service unavailable", detail : "The service you requested is temporary unvailable" }});
                 });
-    }
 });
 
 /* POST add new group
 *  when group is created, there are no members inside */
 router.post('/cluster-add', function (req, res, next) {
-    if(req.session.email == undefined){
-        log("[*] Non logged user is trying to get host-mgmt page from: "+req.ip.replace(/f/g, "").replace(/:/g, "")+" User Agent: "+req.get('User-Agent'),app_log)
-        res.render('login', {unauth: false});
-    }
-    else if (req.session.role != "admin") {
-        log("[*] Non admin user is trying to access host-mgmt page from: "+req.ip.replace(/f/g, "").replace(/:/g, "")+" User Agent: "+req.get('User-Agent'),app_log)
-        res.status(403)
-        res.render('error', {
-            message: "403",
-            error: {status: "Forbidden", detail: "You are not authorized to see this page"}
-        });
-    }
-    else {
         var cluster = req.body.cluster_name;
         cluster = cluster.replace(/ /g, "");
         document = {
@@ -326,26 +242,12 @@ router.post('/cluster-add', function (req, res, next) {
                     res.render('error',{message: "500",  error : { status: "Service unavailable", detail : "The service you requested is temporary unvailable" }});
                 }
             );
-    }
 });
 
 /* POST ADD USER TO A GROUP
  * add a new object to members array of a group
  */
 router.post('/cluster-add-host', function (req, res, next) {
-    if(req.session.email == undefined){
-        log("[*] Non logged user is trying to get host-mgmt page from: "+req.ip.replace(/f/g, "").replace(/:/g, "")+" User Agent: "+req.get('User-Agent'),app_log)
-        res.render('login', {unauth: false});
-    }
-    else if (req.session.role != "admin") {
-        log("[*] Non admin user is trying to access host-mgmt page from: "+req.ip.replace(/f/g, "").replace(/:/g, "")+" User Agent: "+req.get('User-Agent'),app_log)
-        res.status(403)
-        res.render('error', {
-            message: "403",
-            error: {status: "Forbidden", detail: "You are not authorized to see this page"}
-        });
-    }
-    else {
         var cluster = req.body.cluster
         var req_hosts = req.body.host;
         if(!(req_hosts instanceof Array)){
@@ -391,7 +293,6 @@ router.post('/cluster-add-host', function (req, res, next) {
                         res.render('error',{message: "500",  error : { status: "Service unavailable", detail : "The service you requested is temporary unvailable" }});
                     });
         });
-    }
 });
 
 
@@ -399,19 +300,6 @@ router.post('/cluster-add-host', function (req, res, next) {
  * delete an entire group
  */
 router.post('/cluster-delete', function (req, res, next) {
-    if(req.session.email == undefined){
-        log("[*] Non logged user is trying to get host-mgmt page from: "+req.ip.replace(/f/g, "").replace(/:/g, "")+" User Agent: "+req.get('User-Agent'),app_log)
-        res.render('login', {unauth: false});
-    }
-    else if (req.session.role != "admin") {
-        log("[*] Non admin user is trying to access host-mgmt page from: "+req.ip.replace(/f/g, "").replace(/:/g, "")+" User Agent: "+req.get('User-Agent'),app_log)
-        res.status(403)
-        res.render('error', {
-            message: "403",
-            error: {status: "Forbidden", detail: "You are not authorized to see this page"}
-        });
-    }
-    else {
         var clstrs = req.body.cluster;
         if(!(clstrs instanceof Array)){
             clstrs = clstrs.split();
@@ -461,26 +349,12 @@ router.post('/cluster-delete', function (req, res, next) {
                     }
                 );
             });
-    }
 });
 
 /* GET group-user-delete
  * Delete a user entry from a group (pull from stored array)
  */
 router.get('/cluster-delete-host', function (req, res, next) {
-    if(req.session.email == undefined){
-        log("[*] Non logged user is trying to get host-mgmt page from: "+req.ip.replace(/f/g, "").replace(/:/g, "")+" User Agent: "+req.get('User-Agent'),app_log)
-        res.render('login', {unauth: false});
-    }
-    else if (req.session.role != "admin") {
-        log("[*] Non admin user is trying to access host-mgmt page from: "+req.ip.replace(/f/g, "").replace(/:/g, "")+" User Agent: "+req.get('User-Agent'),app_log)
-        res.status(403)
-        res.render('error', {
-            message: "403",
-            error: {status: "Forbidden", detail: "You are not authorized to see this page"}
-        });
-    }
-    else {
         var hostname = req.query.hostname;
         mdb.connect(mongo_instance)
             .then(
@@ -521,7 +395,6 @@ router.get('/cluster-delete-host', function (req, res, next) {
                     res.redirect('/host-groups?error=true&code=\'DM001\'');
                 }
             );
-    }
 });
 
 /***************************************

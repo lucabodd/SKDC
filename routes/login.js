@@ -108,11 +108,6 @@ router.post('/auth', function(req, res, next){
 });
 
 router.post('/password-change', function (req,res,next) {
-    if(req.session.email == undefined){
-        log("[*] Non logged user is trying to get key-mgmt page from: "+req.ip.replace(/f/g, "").replace(/:/g, "")+" User Agent: "+req.get('User-Agent'),app_log)
-        res.render('login', {unauth: false});
-    }
-    else{
         var sys_username = req.session.email.split("@")[0];
         if((req.body.newpassword == req.body.confirmnewpassword) && (req.body.oldpassword != req.body.newpassword) && schema.validate(req.body.newpassword)){
             var oldPwd = req.body.oldpassword;
@@ -163,7 +158,6 @@ router.post('/password-change', function (req,res,next) {
                 res.redirect('/?error=true&code=\'SL030\'');
             }
         }
-    }
 });
 
 router.post("/password-reset", function (req,res,next) {
